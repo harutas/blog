@@ -10,6 +10,7 @@ const NotoSansJP = Noto_Sans_JP({
 	weight: ['500', '600', '700'],
 	subsets: ['latin'],
 	display: 'swap',
+	variable: '--font-NotoSansJP',
 });
 
 export const metadata: Metadata = {
@@ -25,12 +26,13 @@ export default function RootLayout({
 	return (
 		<html
 			lang="ja"
+			className={`${NotoSansJP.variable}`}
 			style={{
 				minHeight: '100vh',
 				backgroundColor: colors.background.base,
 			}}
 		>
-			<body className={`${NotoSansJP.className} flex flex-col`} style={{ minHeight: '100vh' }}>
+			<body className={`flex flex-col`} style={{ minHeight: '100vh' }}>
 				<Header />
 				<main className="container grow mx-auto">{children}</main>
 				<Footer />

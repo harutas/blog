@@ -12,6 +12,11 @@ const config: Config = {
 			sm: '640px',
 			md: '768px',
 		},
+		extend: {
+			fontFamily:{
+				sans: ["var(--font-NotoSansJP)"]
+			}
+		}
 	},
 	plugins: [require('@tailwindcss/typography')],
 };
