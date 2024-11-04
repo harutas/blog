@@ -21,8 +21,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 		<div className="flex flex-col">
 			<div className="flex flex-col items-center py-10 px-6">
 				<Emoji emoji={post.emoji} size="md" />
-				<h1 className="text-xl font-bold font-sans mt-5">{post.title}</h1>
-				<p className="text-gray-500 text-sm font-sans mt-5">
+				<h1 className="text-xl font-bold mt-5">{post.title}</h1>
+				<p className="text-gray-500 text-sm mt-5">
 					投稿日：
 					{formatSlashYMD(new Date(post.createdAt))}
 				</p>

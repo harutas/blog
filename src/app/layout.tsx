@@ -4,14 +4,6 @@ import { colors } from '@/components/system/colors';
 import '@/styles/reset.css';
 import '@/styles/globals.css';
 import type { Metadata } from 'next';
-import { Noto_Sans_JP } from 'next/font/google';
-
-const NotoSansJP = Noto_Sans_JP({
-	weight: ['500', '600', '700'],
-	subsets: ['latin'],
-	display: 'swap',
-	variable: '--font-NotoSansJP',
-});
 
 export const metadata: Metadata = {
 	title: 'Create Next App',
@@ -26,7 +18,6 @@ export default function RootLayout({
 	return (
 		<html
 			lang="ja"
-			className={`${NotoSansJP.variable}`}
 			style={{
 				minHeight: '100vh',
 				backgroundColor: colors.background.base,
