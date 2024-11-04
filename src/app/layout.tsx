@@ -1,8 +1,8 @@
-import { colors } from '@/components/system/colors';
 import { Footer } from '@/components/presenters/organisms/Footer';
 import { Header } from '@/components/presenters/organisms/Header';
-import '@/styles/globals.css';
+import { colors } from '@/components/system/colors';
 import '@/styles/reset.css';
+import '@/styles/globals.css';
 import type { Metadata } from 'next';
 import { Noto_Sans_JP } from 'next/font/google';
 
