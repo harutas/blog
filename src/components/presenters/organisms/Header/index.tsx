@@ -2,6 +2,7 @@ import Link from 'next/link';
 import github from '@/assets/icons/icon_github-mark.svg';
 import x from '@/assets/icons/icon_x.svg';
 import Image from 'next/image';
+import { BLOG_NAME } from '@/constants';
 
 export const Header = () => {
 	return (
@@ -11,7 +12,7 @@ export const Header = () => {
 					href="/"
 					className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-teal-400 to-teal-600"
 				>
-					HaruTech
+					{BLOG_NAME}
 				</Link>
 				<ul className="flex space-x-4 items-center">
 					<li>
