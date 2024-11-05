@@ -13,8 +13,6 @@ export const getAllPosts = (): Post[] => {
 	const files = readdirSync(postsDirectory);
 	return files.map((fileName) => {
 		const slug = formatToSlug(fileName);
-		const [year, month, day] = slug.split('-');
-
 		const filePath = path.join(postsDirectory, fileName);
 		const fileContent = readFileSync(filePath, 'utf-8');
 		const { data, content } = matter(fileContent);
@@ -26,17 +24,16 @@ export const getAllPosts = (): Post[] => {
 			description: data.description,
 			tags: data.tags,
 			content,
-			createdAt: `${year}-${month}-${day}`,
+			createdAt: data.createdAt,
+			updatedAt: data.updatedAt,
 		};
 	});
 };
 
 export const getLatestPosts = (limit = 10): Post[] => {
 	const files = readdirSync(postsDirectory);
-	const posts = files.map((fileName) => {
+	const posts: Post[] = files.map((fileName) => {
 		const slug = formatToSlug(fileName);
-		const [year, month, day] = slug.split('-');
-
 		const filePath = path.join(postsDirectory, fileName);
 		const fileContent = readFileSync(filePath, 'utf-8');
 		const { data, content } = matter(fileContent);
@@ -48,7 +45,8 @@ export const getLatestPosts = (limit = 10): Post[] => {
 			description: data.description,
 			tags: data.tags,
 			content,
-			createdAt: `${year}-${month}-${day}`,
+			createdAt: data.createdAt,
+			updatedAt: data.updatedAt,
 		};
 	});
 
@@ -58,7 +56,6 @@ export const getLatestPosts = (limit = 10): Post[] => {
 export const getPostBySlug = (slug: string): Post => {
 	const fileName = `${slug}.mdx`;
 	const filePath = path.join(postsDirectory, fileName);
-	const [year, month, day] = formatToSlug(fileName).split('-');
 	const fileContent = readFileSync(filePath, 'utf-8');
 	const { data, content } = matter(fileContent);
 
@@ -69,7 +66,8 @@ export const getPostBySlug = (slug: string): Post => {
 		tags: data.tags,
 		description: data.description,
 		content,
-		createdAt: `${year}-${month}-${day}`,
+		createdAt: data.createdAt,
+		updatedAt: data.updatedAt,
 	};
 };
 
