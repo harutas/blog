@@ -7,7 +7,7 @@ import '@/styles/globals.css';
 import type { Metadata } from 'next';
 import { Noto_Sans_JP } from 'next/font/google';
 
-export const NotoSansJP = Noto_Sans_JP({
+const NotoSansJP = Noto_Sans_JP({
 	subsets: ['latin'],
 	display: 'swap',
 });
