@@ -5,12 +5,6 @@ import { SITE_TITLE } from '@/config';
 import '@/styles/reset.css';
 import '@/styles/globals.css';
 import type { Metadata } from 'next';
-import { Noto_Sans_JP } from 'next/font/google';
-
-const NotoSansJP = Noto_Sans_JP({
-	subsets: ['latin'],
-	display: 'swap',
-});
 
 export const metadata: Metadata = {
 	title: SITE_TITLE,
@@ -25,7 +19,6 @@ export default function RootLayout({
 	return (
 		<html
 			lang="ja"
-			className={NotoSansJP.className}
 			style={{
 				minHeight: '100vh',
 				backgroundColor: colors.background.base,
