@@ -50,7 +50,7 @@ export const getLatestPosts = (limit = 10): Post[] => {
 		};
 	});
 
-	return sortByCreatedAtDesc(posts).slice(0, limit);
+	return sortByUpdatedAtDesc(posts).slice(0, limit);
 };
 
 export const getPostBySlug = (slug: string): Post => {
@@ -75,8 +75,10 @@ export const formatToSlug = (fileName: string) => {
 	return fileName.replace(/\.mdx$/, '');
 };
 
-export const sortByCreatedAtDesc = (posts: Post[]) => {
+export const sortByUpdatedAtDesc = (posts: Post[]) => {
 	return posts.sort((a, b) => {
-		return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+		const dateA = a.updatedAt || a.createdAt;
+		const dateB = b.updatedAt || b.createdAt;
+		return new Date(dateB).getTime() - new Date(dateA).getTime();
 	});
 };
