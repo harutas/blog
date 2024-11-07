@@ -1,0 +1,97 @@
+---
+title: updatedbが終わらない：WSL2でlocateコマンドを使う方法
+emoji: 😅
+description: 'This is a description for my first blog post.'
+tags: [Linux]
+createdAt: '2023-08-14'
+---
+
+## はじめに
+
+Linuxでファイルを探すための方法として、locateコマンドがあります。locateコマンドは**専用のデータベース**から検索するため、ディスクをスキャンしてファイルを探すfindコマンドよりも高速に検索することができます。
+
+私はWSL2を使用しているのですが、このデータベースの更新に時間がかかりいつまでも完了しないという現象に遭遇したので、今回はその解決方法の紹介です。
+
+**実行環境**
+
+-   ホストOS: Windows 11
+-   仮想化技術: Windows Subsystem for Linux 2 (WSL2)
+-   ゲストOS: Ubuntu 22.04.3 LTS
+
+## インストールまで
+
+### インストールの確認
+
+locateコマンドがインストールされているかを確認します。
+
+```bash
+$ locate --version
+```
+
+この時点でバージョンが表示されればすでにlocateコマンドを使用することができます。しかし、locateコマンドは初期状態のLinuxにはインストールされていない場合もあるため、インストールされていなければ以降の手順のとおりインストールします。
+
+### mlocateをインストール
+
+locateコマンドはmlocateパッケージに含まれているので、aptコマンドでインストールします。
+
+```bash
+$ sudo apt install mlocate
+```
+
+### データベースの初期化
+
+通常、locateコマンドをインストールすると、updatedbが定期的に実行されるように設定されるため、以降は手動で実施しなくても、自動的にデータベースが更新されます。
+
+```bash
+$ sudo updatedb
+```
+
+## データベースの更新
+
+### updatedbが終わらない
+
+mlocateをインストールしたところ、「Initializing mlocate database; this may take some time…」というメッセージが表示されいつまでもデータベースの初期化が完了しない状態になってしまいました。
+
+### 原因
+
+locateコマンドのデータベースにWindowsのファイルもインデックスしてしまっていたから。
+
+※WSL2はLinuxファイルシステムへのアクセス速度は速いが、Windowsファイルシステム（/mnt/c）へのアクセス速度が遅いため。
+
+### 解決方法
+
+Windowsファイルのインデックス作成を避けるために、/etc/updatedb.confのPRUNEPATHSに/mntを追加します。
+
+#### updatedb.confのバックアップを取る
+
+念のためバックアップを取っておきましょう。
+
+```bash
+$ sudo cp /etc/updatedb.conf /etc/updatedb.conf.org
+```
+
+#### updatedb.confのPRUNEPATHSに/mntを追加する
+
+Vimなどでupdatedb.confを編集します。
+
+```bash
+$ sudo vim /etc/updatedb.conf
+```
+
+```bash
+PRUNEPATHS="/mnt"
+```
+
+これでデータベースの更新時にWindowsファイルがインデックスされないようになります。
+
+#### updatedbが数秒で完了するようになった！
+
+アクセス速度が遅いWindowsファイルをインデックスしないようになったため、updatedbコマンドを実行しても数秒でデータベースの更新が完了するようになりました。
+
+## おわりに
+
+WSL2でlocateコマンドを使用したいときに起きる現象だと思いますが、一度この設定ができれば以降はデータベースの更新に時間はかからなくなると思います。
+
+また、locateコマンドはインストール時に、ファイルパスのデータベースを1日1回作成するように設定されています。その性質上、たった今作成したばかりのファイルはデータベースに入っていないため、locateコマンドでは見つけることはできません。システムにあらかじめインストールされているファイルや、数日前に作成したファイルなど、作成してからしばらく経ったファイルを見つけるのに向いています。findコマンドとlocateコマンドの使い分けは必要ですね。
+
+参考サイト：[https://askubuntu.com/questions/1251484/why-does-it-take-so-much-time-to-initialize-mlocate-database](https://askubuntu.com/questions/1251484/why-does-it-take-so-much-time-to-initialize-mlocate-database)
