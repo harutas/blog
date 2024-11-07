@@ -5,12 +5,16 @@ import path from 'path';
 
 export const postsDirectory = path.join(process.cwd(), 'src/posts');
 
+export const readMDXFile = () => {
+	return readdirSync(postsDirectory).filter((fileName) => fileName.endsWith('.mdx'));
+};
+
 export function getAllPostSlugs() {
-	return readdirSync(postsDirectory).map((fileName) => formatToSlug(fileName));
+	return readMDXFile().map((fileName) => formatToSlug(fileName));
 }
 
 export const getAllPosts = (): Post[] => {
-	const files = readdirSync(postsDirectory);
+	const files = readMDXFile();
 	return files.map((fileName) => {
 		const slug = formatToSlug(fileName);
 		const filePath = path.join(postsDirectory, fileName);
@@ -31,7 +35,7 @@ export const getAllPosts = (): Post[] => {
 };
 
 export const getLatestPosts = (limit = 10): Post[] => {
-	const files = readdirSync(postsDirectory);
+	const files = readMDXFile();
 	const posts: Post[] = files.map((fileName) => {
 		const slug = formatToSlug(fileName);
 		const filePath = path.join(postsDirectory, fileName);
