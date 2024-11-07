@@ -28,6 +28,13 @@ export const formatSlashYMD = (date: Date, tz?: string) => {
 };
 
 /**
+ * YYYY/MM/DD
+ */
+export const formatDashYMD = (date: Date, tz?: string) => {
+	return dayjs(date).tz(tz).format('YYYY-MM-DD');
+};
+
+/**
  * YYYY
  */
 export const formatY = (date: Date, tz?: string) => {
