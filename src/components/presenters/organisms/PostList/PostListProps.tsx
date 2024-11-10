@@ -1,7 +1,7 @@
 import { Post } from '@/types/post';
 import { Props } from '../../molecules/PostListItem';
 import { BASE_BLOG_PATH } from '@/constants/path';
-import { formatSlashYMD } from '@/libs/dateFormat';
+import { formatSlashYMD } from '@/libs/date';
 
 export type Params = {
 	post: Post;

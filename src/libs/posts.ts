@@ -5,16 +5,18 @@ import path from 'path';
 
 export const postsDirectory = path.join(process.cwd(), 'src/posts');
 
+export const readMDXFile = () => {
+	return readdirSync(postsDirectory).filter((fileName) => fileName.endsWith('.mdx'));
+};
+
 export function getAllPostSlugs() {
-	return readdirSync(postsDirectory).map((fileName) => formatToSlug(fileName));
+	return readMDXFile().map((fileName) => formatToSlug(fileName));
 }
 
 export const getAllPosts = (): Post[] => {
-	const files = readdirSync(postsDirectory);
+	const files = readMDXFile();
 	return files.map((fileName) => {
 		const slug = formatToSlug(fileName);
-		const [year, month, day] = slug.split('-');
-
 		const filePath = path.join(postsDirectory, fileName);
 		const fileContent = readFileSync(filePath, 'utf-8');
 		const { data, content } = matter(fileContent);
@@ -26,17 +28,16 @@ export const getAllPosts = (): Post[] => {
 			description: data.description,
 			tags: data.tags,
 			content,
-			createdAt: `${year}-${month}-${day}`,
+			createdAt: data.createdAt,
+			updatedAt: data.updatedAt,
 		};
 	});
 };
 
 export const getLatestPosts = (limit = 10): Post[] => {
-	const files = readdirSync(postsDirectory);
-	const posts = files.map((fileName) => {
+	const files = readMDXFile();
+	const posts: Post[] = files.map((fileName) => {
 		const slug = formatToSlug(fileName);
-		const [year, month, day] = slug.split('-');
-
 		const filePath = path.join(postsDirectory, fileName);
 		const fileContent = readFileSync(filePath, 'utf-8');
 		const { data, content } = matter(fileContent);
@@ -48,17 +49,17 @@ export const getLatestPosts = (limit = 10): Post[] => {
 			description: data.description,
 			tags: data.tags,
 			content,
-			createdAt: `${year}-${month}-${day}`,
+			createdAt: data.createdAt,
+			updatedAt: data.updatedAt,
 		};
 	});
 
-	return sortByCreatedAtDesc(posts).slice(0, limit);
+	return sortByUpdatedAtDesc(posts).slice(0, limit);
 };
 
 export const getPostBySlug = (slug: string): Post => {
 	const fileName = `${slug}.mdx`;
 	const filePath = path.join(postsDirectory, fileName);
-	const [year, month, day] = formatToSlug(fileName).split('-');
 	const fileContent = readFileSync(filePath, 'utf-8');
 	const { data, content } = matter(fileContent);
 
@@ -69,7 +70,8 @@ export const getPostBySlug = (slug: string): Post => {
 		tags: data.tags,
 		description: data.description,
 		content,
-		createdAt: `${year}-${month}-${day}`,
+		createdAt: data.createdAt,
+		updatedAt: data.updatedAt,
 	};
 };
 
@@ -77,8 +79,10 @@ export const formatToSlug = (fileName: string) => {
 	return fileName.replace(/\.mdx$/, '');
 };
 
-export const sortByCreatedAtDesc = (posts: Post[]) => {
+export const sortByUpdatedAtDesc = (posts: Post[]) => {
 	return posts.sort((a, b) => {
-		return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+		const dateA = a.updatedAt || a.createdAt;
+		const dateB = b.updatedAt || b.createdAt;
+		return new Date(dateB).getTime() - new Date(dateA).getTime();
 	});
 };

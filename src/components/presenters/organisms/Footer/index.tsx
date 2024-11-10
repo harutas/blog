@@ -1,5 +1,5 @@
 import { BLOG_NAME } from '@/constants';
-import { formatY } from '@/libs/dateFormat';
+import { formatY } from '@/libs/date';
 
 export const Footer = () => {
 	return (
